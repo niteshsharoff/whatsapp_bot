@@ -93,6 +93,7 @@ export type AnyMediaMessageContent = (
         seconds?: number
     } | ({
         sticker: WAMediaUpload
+        isAnimated?: boolean 
     } & WithDimensions) | ({
         document: WAMediaUpload
         mimetype: string
@@ -100,10 +101,16 @@ export type AnyMediaMessageContent = (
     } & Buttonable & Templatable)) &
     { mimetype?: string }
 
+export type ButtonReplyInfo = {
+    displayText: string
+    id: string
+    index: number
+}
+
 export type AnyRegularMessageContent = (
     ({
 	    text: string
-        linkPreview?: WAUrlInfo
+        linkPreview?: WAUrlInfo | null
     }
     & Mentionable & Buttonable & Templatable & Listable) |
     AnyMediaMessageContent |
@@ -117,6 +124,9 @@ export type AnyRegularMessageContent = (
         location: WALocationMessage
     } | {
         react: proto.IReactionMessage
+    } | {
+        buttonReply: ButtonReplyInfo
+        type: 'template' | 'plain'
     }
 ) & ViewOnce
 
@@ -189,3 +199,5 @@ export type MediaDecryptionKeyInfo = {
     cipherKey: Buffer
     macKey?: Buffer
 }
+
+export type MinimalMessage = Pick<proto.IWebMessageInfo, 'key' | 'messageTimestamp'>
